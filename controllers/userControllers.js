@@ -61,7 +61,14 @@ export const getUserCoursesController = async(req, res) => {
 
 
 export const logoutController = (req, res) =>{
-    const {id , token} = req.body;
+    const token = req.headers.authorization;
+    if(!token){
+        return res.status(401).send({message: "No token provided"});
+    }
+    const decoded = jwt.decode(token, constants.JWT_SECRET);
+    const userId = decoded.id;
+    const expiringToken = jwt.sign({id:userId},constants.JWT_SECRET,{expiresIn:"1s"})
+    res.status(200).send({message: "User logged out successfully"});
     
 }
 
