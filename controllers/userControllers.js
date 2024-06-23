@@ -21,7 +21,7 @@ export const registerController = async(req, res) => {
     // fetch user details from database, if user exists return error
     const userExists = await getUserCredentials(user.email);
     if(userExists){
-        return res.status(400).send({message: "User already exists"});
+        return res.status(409).send({message: "User already exists"});
     }
     const salt = genSaltSync(8);
     user.password = hashSync(user.password, salt);
@@ -38,11 +38,11 @@ export const loginController = async(req, res) => {
     // get user details from database
     const user = await getUserCredentials(email);
     if(!user){
-        return res.status(400).send({message: "User not found"});
+        return res.status(409).send({message: "email doesn't exist"});
     }
     const match = compareSync(password, user.password);
     if(!match){
-        return res.status(400).send({message: "Invalid credentials"});
+        return res.status(401).send({message: "Invalid credentials"});
     }
     const token = jwt.sign({id: user.id}, constants.JWT_SECRET, {expiresIn: "1d"});
     res.status(200).send({message: "User logged in successfully", data: user.id, token: token});
@@ -85,7 +85,7 @@ export const checkEnrolledController = async(req, res) => {
 
 export const enrollStudentController = async(req,res) => {
     const userId = req.userId;
-    const courseId = req.params.courseId;
+    const {courseId} = req.body;
     const enrolledres = await enrollStudent(userId,courseId);
     if(!enrolledres){
         return res.status(400).send({msg:"error enrollig student"});

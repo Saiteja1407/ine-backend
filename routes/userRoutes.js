@@ -12,7 +12,7 @@ userRouter.post('/auth/login', loginController);
 userRouter.post('/auth/logout', logoutController);
 
 userRouter.get('/enrolled/:courseId',verifyToken,checkEnrolledController);
-userRouter.post('/enrolled/:courseId',verifyToken,enrollStudentController);
+userRouter.post('/enrollments',verifyToken,enrollStudentController);
 
 userRouter.get('/enrollments',verifyToken,getUserCoursesController);
 

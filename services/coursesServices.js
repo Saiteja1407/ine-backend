@@ -31,10 +31,42 @@ export const getCourseDetails = async (courseId) => {
     }
 }
 
-export const getLesson = async (lessonId) => {
+export const getLesson = async (userId,lessonId) => {
     try {
-        const lessonInfo = await client.query('select * from lessons where id=$1',[lessonId]);
+        const lessonInfo = await client.query(`
+                        SELECT 
+                            l.id,
+                            l.name,
+                            l.text_material,
+                            l.video_url,
+                            l.topic_id,
+                            l.lesson_no,
+                            CASE 
+                                WHEN up.user_id IS NOT NULL THEN true
+                                ELSE false
+                            END AS is_completed
+                        FROM 
+                            lessons l
+                        LEFT JOIN 
+                            user_progress up 
+                        ON 
+                            l.id = up.lesson_id 
+                        AND 
+                            up.user_id = $1
+                        WHERE 
+                            l.id = $2;
+
+            `,[userId,lessonId]);
         return lessonInfo.rows[0];
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const markLessonComplete = async (userId,lessonId) => {
+    try {
+        const result = await client.query("INSERT INTO user_progress(user_id, lesson_id) VALUES($1,$2)",[userId,lessonId]);
+        return result;
     } catch (error) {
         console.log(error)
     }
