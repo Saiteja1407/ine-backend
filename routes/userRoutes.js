@@ -14,7 +14,8 @@ userRouter.post('/auth/logout', logoutController);
 userRouter.get('/enrolled/:courseId',verifyToken,checkEnrolledController);
 userRouter.post('/enrolled/:courseId',verifyToken,enrollStudentController);
 
-userRouter.get('/:id/profile',verifyToken, getUserCoursesController);
+userRouter.get('/enrollments',verifyToken,getUserCoursesController);
+
 
 
 

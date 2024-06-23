@@ -50,10 +50,10 @@ export const loginController = async(req, res) => {
 }
 
 export const getUserCoursesController = async(req, res) => {
-    const userId = req.params.id;
+    const userId = req.userId;
     // Fetch user courses  from database
     const result = await getUserCoursesInfo(userId);
-    if(!result){
+    if(result.length === 0){
         res.status(400).send({message: "Error fetching user courses"});
     }
     res.status(200).send({message: "User courses fetched successfully",data:result});

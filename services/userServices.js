@@ -24,7 +24,21 @@ export const getUserCredentials = async (emailId) => {
 export const getUserCoursesInfo = async (userId) => {
     try {
         // Fetch user courses  from database
-        return courses;
+        const result = await client.query(`
+            SELECT
+                c.id AS course_id,
+                c.title AS course_title,
+                COUNT(l.id) AS total_lessons,
+                COUNT(up.lesson_id) AS completed_lessons
+            FROM courses c
+            JOIN enrollments e ON c.id = e.course_id
+            JOIN topics t ON c.id = t.course_id
+            JOIN lessons l ON t.id = l.topic_id
+            LEFT JOIN user_progress up ON l.id = up.lesson_id AND e.user_id = up.user_id
+            WHERE e.user_id = $1
+            GROUP BY c.id, c.title
+            ORDER BY c.title`, [userId]);
+        return result.rows;
     } catch (error) {
         console.log("error fetching user courses");
     }
