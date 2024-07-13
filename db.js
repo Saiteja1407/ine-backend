@@ -5,9 +5,9 @@ const { Client } = pg;
 
 const client = new Client({
     host: constants.DB_URL,
-    user: "postgres",
-    password: "saitejareddy",
-    database: "postgres",
+    user:  "sai",
+    password: "HHePGpQoHTcSsM3FmC3ZcXJVoToDfoJX",
+    database: "ine_db",
     port: 5432,
     ssl: {
         rejectUnauthorized: false
