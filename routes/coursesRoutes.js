@@ -1,9 +1,10 @@
 import express from "express";
-import { courseDetailsController, getCoursesController, getLessonController, lessonCompleteController } from "../controllers/coursesController.js";
+import { courseDetailsController, getCategoriesController, getCoursesController, getLessonController, lessonCompleteController } from "../controllers/coursesController.js";
 import verifyToken from "../middlewares/verifyToken.js";
 const coursesRouter = express.Router();
 
 coursesRouter.get("/courses",verifyToken,getCoursesController);
+coursesRouter.get('/courses/categories',verifyToken,getCategoriesController)
 
 coursesRouter.get('/courses/:courseId/content',verifyToken,courseDetailsController)
 

@@ -1,5 +1,5 @@
 import {hashSync,compareSync, genSaltSync} from 'bcrypt';
-import {addUser, checkStudentEnrolled, enrollStudent, getUserCoursesInfo, getUserCredentials} from '../services/userServices.js';
+import {addUser, checkStudentEnrolled, enrollStudent, getUserCoursesInfo, getUserCredentials, multipleEnrollments} from '../services/userServices.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import axios from 'axios';
@@ -54,7 +54,7 @@ export const getUserCoursesController = async(req, res) => {
     // Fetch user courses  from database
     const result = await getUserCoursesInfo(userId);
     if(result.length === 0){
-        res.status(400).send({message: "Error fetching user courses"});
+        return res.status(200).send({message: "No user courses",data:[]});
     }
     res.status(200).send({message: "User courses fetched successfully",data:result});
 }
@@ -91,4 +91,17 @@ export const enrollStudentController = async(req,res) => {
         return res.status(400).send({msg:"error enrollig student"});
     }
     return res.status(200).send({msg:"student enrolled successfully",})
+}
+
+export const multipleEnrollmentsController = async(req,res) => {
+    try {
+        const {courses} = req.body;
+        const userId = req.userId;
+        const result = await multipleEnrollments(userId,courses);
+        if(result){
+            return res.status(200).send({msg:"enrolled successfully"});
+        }
+    } catch (error) {
+        console.log("error enrolling paid courses:",error);
+    }
 }

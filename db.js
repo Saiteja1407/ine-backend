@@ -5,9 +5,9 @@ const { Client } = pg;
 
 const client = new Client({
     host: constants.DB_URL,
-    user:  "sai",
-    password: "HHePGpQoHTcSsM3FmC3ZcXJVoToDfoJX",
-    database: "ine_db",
+    user:  constants.DB_USER,
+    password: constants.DB_PASSWORD,
+    database: constants.DB_NAME,
     port: 5432,
     ssl: {
         rejectUnauthorized: false

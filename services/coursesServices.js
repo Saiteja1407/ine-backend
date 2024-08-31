@@ -1,12 +1,23 @@
 import client from "../db.js";
 
-export const getCourses = async () => {
+export const getCourses = async (query,values) => {
     try {
         // Fetch courses from database
-        const result = await client.query("SELECT * FROM courses");
+        const result = await client.query(query,values);
         return result.rows;
     } catch (error) {
         console.log("error fetching courses");
+    }
+}
+
+export const getCategories = async () => {
+    try {
+        // Fetch categories from database
+        const result = await client.query("SELECT DISTINCT category FROM courses");
+        return result.rows;
+    }
+    catch (error) {
+        console.log("error fetching categories");
     }
 }
 
