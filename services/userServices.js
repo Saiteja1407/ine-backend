@@ -64,17 +64,17 @@ export const enrollStudent = async (userId,courseId) =>{
     }
 }
 
-export const multipleEnrollments = async (userId, courseIds) => {
+export const multipleEnrollments = async (userId, courses) => {
     try {
         await client.query('BEGIN');
-        const enrollmentPromises = courseIds.map(courseId => {
+        const enrollmentPromises = courses.map(courseId => {
             return client.query('insert into enrollments(user_id, course_id) values($1, $2) on conflict do nothing', [userId, courseId]);
         });
         await Promise.all(enrollmentPromises);
         await client.query(`
             update cart 
             set status = 'purchased'
-            where user_id = $1 and course_id = any($2)`, [userId, courseIds]);
+            where user_id = $1 and course_id = any($2)`, [userId, courses]);
         await client.query('COMMIT');
         return true;
     } catch (error) {
